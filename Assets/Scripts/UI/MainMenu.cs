@@ -17,6 +17,8 @@ namespace SanAndreasUnity.UI
 
 		public Canvas canvas;
 
+		public const string KochiPrototypeSceneName = "KochiPrototype";
+
 
 
 		void Awake()
@@ -26,6 +28,9 @@ namespace SanAndreasUnity.UI
 
 			// add Exit button
 			this.menuBar.RegisterMenuEntry("Exit", int.MaxValue, () => GameManager.ExitApplication());
+
+			// Kochi prototype runs on its own placeholder content and doesn't need the GTA loader
+			this.menuBar.RegisterMenuEntry("Kochi Prototype", int.MaxValue - 1, () => UnityEngine.SceneManagement.SceneManager.LoadScene(KochiPrototypeSceneName));
 		}
 
 		void OnSceneChanged(SceneChangedMessage sceneChangedMessage)
