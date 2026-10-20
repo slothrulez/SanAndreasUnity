@@ -1,0 +1,38 @@
+{
+    "id": "fort_kochi_test",
+    "displayName": "Fort Kochi test district",
+    "seed": 682001,
+    "blocksX": 3,
+    "blocksZ": 3,
+    "blockSize": 60,
+    "roadWidth": 10,
+    "buildingSetback": 3,
+    "lotWidth": 12,
+    "lotDepth": 14,
+    "lotGap": 1.5,
+    "minFloors": 1,
+    "maxFloors": 4,
+    "floorHeight": 3.2,
+    "buildingPalette": ["#F2EBD9", "#C0583A", "#3F8F8A", "#E0B341", "#7FA7C9", "#B8C7A0"],
+    "groundColor": "#6B8E3D",
+    "roadColor": "#3A3A3C",
+    "waterSide": "west",
+    "waterWidth": 120,
+    "quayWidth": 4,
+    "props": [
+        { "name": "Ferry jetty", "shape": "box", "position": { "x": -19, "y": -0.25, "z": 105 }, "size": { "x": 20, "y": 0.5, "z": 4 }, "rotationY": 0, "color": "#8A6A4A", "solid": true, "isLandmark": true },
+        { "name": "Chinese fishing net (placeholder) - mast", "shape": "cylinder", "position": { "x": -14, "y": 2.5, "z": 35 }, "size": { "x": 0.5, "y": 9, "z": 0.5 }, "rotationY": 0, "color": "#5B4632", "solid": true, "isLandmark": true },
+        { "name": "Chinese fishing net (placeholder) - boom", "shape": "box", "position": { "x": -16, "y": 6, "z": 35 }, "size": { "x": 12, "y": 0.3, "z": 0.3 }, "rotationY": 0, "color": "#5B4632", "solid": false, "isLandmark": false },
+        { "name": "Chinese fishing net (placeholder) - net", "shape": "box", "position": { "x": -21, "y": 3.5, "z": 35 }, "size": { "x": 6, "y": 4, "z": 6 }, "rotationY": 0, "color": "#C9C2A8", "solid": false, "isLandmark": false },
+        { "name": "Colonial church (placeholder)", "shape": "box", "position": { "x": 35, "y": 5, "z": 105 }, "size": { "x": 14, "y": 10, "z": 24 }, "rotationY": 0, "color": "#F4F1E8", "solid": true, "isLandmark": true },
+        { "name": "Colonial church (placeholder) - tower", "shape": "box", "position": { "x": 35, "y": 9, "z": 120 }, "size": { "x": 5, "y": 18, "z": 5 }, "rotationY": 0, "color": "#F4F1E8", "solid": true, "isLandmark": false },
+        { "name": "Bus shelter", "shape": "box", "position": { "x": 78.5, "y": 1.25, "z": 35 }, "size": { "x": 2, "y": 2.5, "z": 6 }, "rotationY": 0, "color": "#2E6F9E", "solid": true, "isLandmark": true },
+        { "name": "Tea shop (chaya kada)", "shape": "box", "position": { "x": 149, "y": 1.5, "z": 100 }, "size": { "x": 4, "y": 3, "z": 5 }, "rotationY": 0, "color": "#D8A23A", "solid": true, "isLandmark": true },
+        { "name": "Auto-rickshaw stand", "shape": "box", "position": { "x": 141.5, "y": 1.5, "z": 155 }, "size": { "x": 0.2, "y": 3, "z": 1.2 }, "rotationY": 0, "color": "#F2C230", "solid": true, "isLandmark": true }
+    ],
+    "playerSpawn": { "position": { "x": 76.5, "y": 0.1, "z": 15 }, "rotationY": 270, "color": "#FFFFFF" },
+    "vehicleSpawns": [
+        { "position": { "x": 72.5, "y": 0, "z": 20 }, "rotationY": 0, "color": "#E8E2D0" },
+        { "position": { "x": 137.5, "y": 0, "z": 50 }, "rotationY": 180, "color": "#2B4C7E" }
+    ]
+}

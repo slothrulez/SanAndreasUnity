@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Demo.unity
     guid: 4d342ee4081345b4fa59c038c306616d
+  - enabled: 1
+    path: Assets/Kochi/Scenes/KochiPrototype.unity
+    guid: 02aeb52730f943b1b82ecb8884fdfa67
   m_configObjects: {}
