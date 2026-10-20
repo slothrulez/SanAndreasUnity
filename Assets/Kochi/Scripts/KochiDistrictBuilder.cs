@@ -6,8 +6,6 @@ namespace Kochi.World
     /// <summary>Instantiates placeholder geometry (primitives with colliders) for a district.</summary>
     public static class KochiDistrictBuilder
     {
-        static readonly int ColorId = Shader.PropertyToID("_Color");
-
         public static KochiDistrictData LoadFromResources(string resourcePath)
         {
             var textAsset = Resources.Load<TextAsset>(resourcePath);
@@ -64,9 +62,7 @@ namespace Kochi.World
             }
             else
             {
-                propertyBlock.Clear();
-                propertyBlock.SetColor(ColorId, piece.color);
-                renderer.SetPropertyBlock(propertyBlock);
+                KochiMaterials.ApplyPlaceholder(renderer, propertyBlock, piece.color);
             }
 
             return go;

@@ -17,6 +17,17 @@ or choose **Kochi Prototype** in the main menu of `Startup.unity`.
 | Reload district JSON | F5 |
 | Release / lock cursor | Esc / left click |
 
+## Build
+Unity menu **Kochi > Build Prototype (Linux / Windows / WebGL)** builds a player that contains only
+the Kochi scene. From the command line:
+
+```bash
+Unity -quit -projectPath . -executeMethod Kochi.EditorTools.KochiBuild.BuildWebGL -kochiBuildPath Builds/KochiWebGL
+```
+
+`BuildLinux` and `BuildWindows` work the same way. WebGL output is uncompressed, so any static
+file server can host it (for example `python3 -m http.server -d Builds/KochiWebGL 8080`).
+
 ## Add or extend a district
 1. Copy `Resources/Kochi/Districts/fort_kochi_test.json` to `<id>.json` in the same folder.
 2. Edit the grid (`blocksX`, `blocksZ`, `blockSize`, `roadWidth`), building ranges and palette,
