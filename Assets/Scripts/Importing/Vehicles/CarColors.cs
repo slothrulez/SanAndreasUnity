@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Importing.Vehicles
 
         public static CarColors GetCarDefaults(string carName)
         {
-            return _sCarColors.ContainsKey(carName) ? _sCarColors[carName] : null;
+            return _sCarColors != null && _sCarColors.ContainsKey(carName) ? _sCarColors[carName] : null;
         }
 
         public static Color32[] FromIndices(params int[] indices)

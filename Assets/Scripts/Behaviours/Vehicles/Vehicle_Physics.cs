@@ -54,7 +54,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void InitializePhysics()
         {
-            _geometryParts.AttachCollisionModel(transform, true);
+            _geometryParts?.AttachCollisionModel(transform, true);
 
             _rigidBody = gameObject.GetComponentOrThrow<Rigidbody>();
 

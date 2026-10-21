@@ -373,12 +373,12 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public void RegisterFocusPoint(Transform tr, FocusPointParameters parameters)
 		{
-			this.FocusPointManager.RegisterFocusPoint(tr, parameters);
+			this.FocusPointManager?.RegisterFocusPoint(tr, parameters);
 		}
 
 		public void UnRegisterFocusPoint(Transform tr)
 		{
-			this.FocusPointManager.UnRegisterFocusPoint(tr);
+			this.FocusPointManager?.UnRegisterFocusPoint(tr);
 		}
 
 		private void OnMaxDrawDistanceChanged()
@@ -428,6 +428,10 @@ namespace SanAndreasUnity.Behaviours.World
         {
 
 			if (!Loader.HasLoaded)
+				return;
+
+			// Content that doesn't load the GTA map has no world system.
+			if (this.FocusPointManager == null)
 				return;
 
 			_updateTimeLimitStopwatch.Restart();

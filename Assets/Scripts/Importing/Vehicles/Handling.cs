@@ -269,6 +269,11 @@ namespace SanAndreasUnity.Importing.Vehicles
             }
         }
 
+        public static void AddEntries(IEnumerable<IEntry> entries)
+        {
+            _sEntries = (_sEntries ?? Enumerable.Empty<IEntry>()).Concat(entries).ToList();
+        }
+
         public static TEntry Get<TEntry>(String id)
             where TEntry : IVehicleEntry
         {
