@@ -137,6 +137,11 @@ namespace SanAndreasUnity.Importing.Items
 
         }
 
+        public static void AddDefinition(IObjectDefinition definition)
+        {
+            _definitions[definition.Id] = definition;
+        }
+
         public static TDefinition GetDefinition<TDefinition>(int id)
             where TDefinition : class, IObjectDefinition
         {

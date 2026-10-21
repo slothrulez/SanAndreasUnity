@@ -33,6 +33,37 @@ namespace SanAndreasUnity.Behaviours
             _boneIdDict = _frames.Where(x => x.BoneId > -1).ToDictionary(x => x.BoneId, x => x);
         }
 
+        /// Builds frames from an existing transform hierarchy (models that are not loaded from .dff files).
+        /// Every transform becomes a frame and a bone, named by <paramref name="getName"/>.
+        public void InitializeFromHierarchy(Transform root, System.Func<Transform, string> getName)
+        {
+            var transforms = root.GetComponentsInChildren<Transform>(true);
+            _frames = new Frame[transforms.Length];
+            var indexOf = new Dictionary<Transform, int>();
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                var t = transforms[i];
+                indexOf[t] = i;
+                var frame = t.gameObject.GetComponent<Frame>() ?? t.gameObject.AddComponent<Frame>();
+                frame.Initialize(i, i, getName(t));
+                t.gameObject.name = frame.Name;
+                _frames[i] = frame;
+            }
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i] != root && indexOf.TryGetValue(transforms[i].parent, out int parentIndex))
+                {
+                    _frames[i].Parent = _frames[parentIndex];
+                    _frames[i].ParentIndex = parentIndex;
+                }
+                else
+                {
+                    _frames[i].ParentIndex = -1;
+                }
+            }
+            _boneIdDict = _frames.ToDictionary(x => x.BoneId, x => x);
+        }
+
 		public Frame GetByName(string name, bool ignoreWhiteSpaces = false)
         {
 			if (ignoreWhiteSpaces)

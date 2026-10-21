@@ -80,8 +80,18 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
+		/// Optional replacement for the GTA loading steps, used by content that is not loaded from a GTA installation.
+		public static System.Func<LoadingStep[]> CustomLoadingSteps;
+
 		private static void AddLoadingSteps ()
 		{
+			if (CustomLoadingSteps != null)
+			{
+				foreach (var customStep in CustomLoadingSteps())
+					AddLoadingStep(customStep);
+				return;
+			}
+
 
 			LoadingStep[] steps = new LoadingStep[] {
 				new LoadingStep ( StepConfigure, "Configuring", 0f ),

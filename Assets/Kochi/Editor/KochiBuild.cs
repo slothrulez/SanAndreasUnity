@@ -20,7 +20,9 @@ namespace Kochi.EditorTools
         public static void BuildWindows() => ExitIfCommandLine(Build(BuildTarget.StandaloneWindows64, "Builds/KochiWindows/KochiPrototype.exe"));
 
         [MenuItem("Kochi/Build Prototype (WebGL)")]
-        public static void BuildWebGL()
+        public static void BuildWebGL() => BuildWebGLInternal("Builds/KochiWebGL", null);
+
+        static void BuildWebGLInternal(string defaultPath, string[] scenes)
         {
             // Uncompressed output can be served by any static file server.
             var originalCompression = PlayerSettings.WebGL.compressionFormat;
@@ -30,7 +32,7 @@ namespace Kochi.EditorTools
             bool succeeded;
             try
             {
-                succeeded = Build(BuildTarget.WebGL, "Builds/KochiWebGL");
+                succeeded = Build(BuildTarget.WebGL, defaultPath, scenes);
             }
             finally
             {
@@ -40,14 +42,23 @@ namespace Kochi.EditorTools
             ExitIfCommandLine(succeeded);
         }
 
-        static bool Build(BuildTarget target, string defaultPath)
+        // The SanAndreasUnity engine running Kochi content: Startup (menu) + Main (game) scenes.
+        public static readonly string[] EngineScenes = { "Assets/Scenes/Startup.unity", "Assets/Scenes/Main.unity" };
+
+        [MenuItem("Kochi/Build Engine Game (Linux)")]
+        public static void BuildEngineLinux() => ExitIfCommandLine(Build(BuildTarget.StandaloneLinux64, "Builds/KochiEngineLinux/Kochi.x86_64", EngineScenes));
+
+        [MenuItem("Kochi/Build Engine Game (WebGL)")]
+        public static void BuildEngineWebGL() => BuildWebGLInternal("Builds/KochiEngineWebGL", EngineScenes);
+
+        static bool Build(BuildTarget target, string defaultPath, string[] scenes = null)
         {
             string path = GetArg("-kochiBuildPath") ?? defaultPath;
             string originalProductName = PlayerSettings.productName;
             PlayerSettings.productName = ProductName;
             var options = new BuildPlayerOptions
             {
-                scenes = new[] { ScenePath },
+                scenes = scenes ?? new[] { ScenePath },
                 locationPathName = path,
                 target = target,
                 options = BuildOptions.None,

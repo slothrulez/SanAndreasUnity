@@ -238,6 +238,9 @@ namespace SanAndreasUnity.Behaviours
         }
 
 
+        /// Optional source of ped models that are not loaded from .dff files. Returns null if it does not handle the model.
+        public static System.Func<string, Transform, FrameContainer> CustomModelLoader;
+
         private void LoadModel(string modelName, params string[] txds)
         {
             if (_frames != null)
@@ -247,8 +250,12 @@ namespace SanAndreasUnity.Behaviours
 				_frames = null;
             }
 
-            var geoms = Geometry.Load(modelName, txds);
-            _frames = geoms.AttachFrames(transform, MaterialFlags.Default);
+            _frames = CustomModelLoader?.Invoke(modelName, transform);
+            if (_frames == null)
+            {
+                var geoms = Geometry.Load(modelName, txds);
+                _frames = geoms.AttachFrames(transform, MaterialFlags.Default);
+            }
 
 			// we have to remove white spaces from frame names and their game objects, because some models
 			// have white spaces, and some don't - and we need to have the same frame names for all models,

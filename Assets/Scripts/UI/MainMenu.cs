@@ -31,6 +31,7 @@ namespace SanAndreasUnity.UI
 
 			// Kochi prototype runs on its own placeholder content and doesn't need the GTA loader
 			this.menuBar.RegisterMenuEntry("Kochi Prototype", int.MaxValue - 1, () => UnityEngine.SceneManagement.SceneManager.LoadScene(KochiPrototypeSceneName));
+			this.menuBar.RegisterMenuEntry("Play Kochi", int.MaxValue - 2, SanAndreasUnity.Kochi.KochiContent.StartGame);
 		}
 
 		void OnSceneChanged(SceneChangedMessage sceneChangedMessage)

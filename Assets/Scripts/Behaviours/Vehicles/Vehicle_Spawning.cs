@@ -368,6 +368,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 TextureDictionary.Load("misc"));
         }
 
+        /// Optional source of vehicle models that are not loaded from .dff files. Returns null if it does not handle the vehicle.
+        /// The returned frames must contain "wheel" and "wheel_*_dummy" frames, and may contain "ped_frontseat"/"ped_backseat".
+        public static System.Func<VehicleDef, Transform, FrameContainer> CustomModelLoader;
+
         private void Initialize(VehicleDef def, int[] colors = null)
         {
             Definition = def;
@@ -392,9 +396,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             name = Definition.GameName;
 
-            _geometryParts = LoadGeometryParts(Definition);
-
-            _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
+            _frames = CustomModelLoader?.Invoke(Definition, transform);
+            if (_frames == null)
+            {
+                _geometryParts = LoadGeometryParts(Definition);
+                _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
+            }
 
             var wheelFrame = _frames.FirstOrDefault(x => x.Name == "wheel");
 

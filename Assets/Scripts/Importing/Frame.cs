@@ -23,6 +23,13 @@ namespace SanAndreasUnity.Behaviours
             get { return _path ?? (_path = FindPath()); }
         }
 
+        internal void Initialize(int index, int boneId, string name)
+        {
+            Index = index;
+            BoneId = boneId;
+            Name = name;
+        }
+
         internal void Initialize(Importing.Conversion.Geometry.GeometryFrame frame)
         {
             Index = frame.Source.Index;

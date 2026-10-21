@@ -462,8 +462,13 @@ namespace SanAndreasUnity.Importing
                 return defaultZoneName;
         }
 
+        /// Optional zone name source for content that does not load GTA zones.
+        public static System.Func<UnityEngine.Vector3, string> CustomZoneName;
+
         public static string GetZoneName(UnityEngine.Vector3 worldPos, bool use2DPos = false)
         {
+            if (CustomZoneName != null)
+                return CustomZoneName(worldPos);
             if (use2DPos)
                 return GetZoneName(worldPos.ToVec2WithXAndZ());
             return GetZoneName(ZoneHelpers.zoneInfoList, worldPos);

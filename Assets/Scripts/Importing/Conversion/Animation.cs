@@ -218,8 +218,18 @@ namespace SanAndreasUnity.Importing.Conversion
             return package;
         }
 
+        /// Optional source of animations that do not come from .ifp files. Returns null if it does not handle the file.
+        public static System.Func<string, string, FrameContainer, Animation> CustomLoader;
+
         public static Animation Load(string fileName, string clipName, FrameContainer frames)
         {
+            if (CustomLoader != null)
+            {
+                var custom = CustomLoader(fileName, clipName, frames);
+                if (custom != null)
+                    return custom;
+            }
+
             Package package = LoadPackageOnly(fileName);
             return package.Load(clipName, frames);
         }
@@ -232,6 +242,13 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public UVector3 RootStart { get { return _rootStart; } }
         public UVector3 RootEnd { get { return _rootEnd; } }
+
+        public Animation(UnityEngine.AnimationClip clip, UVector3 rootStart, UVector3 rootEnd)
+        {
+            _clip = clip;
+            _rootStart = rootStart;
+            _rootEnd = rootEnd;
+        }
 
         private Animation(Clip anim, FrameContainer frames)
         {

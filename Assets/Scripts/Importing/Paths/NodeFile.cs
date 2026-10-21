@@ -237,6 +237,10 @@ namespace SanAndreasUnity.Importing.Paths
 
         public static IEnumerable<NodeFile> GetAreasInRadius(UnityEngine.Vector3 pos, float radius)
         {
+            // No path files loaded (content without GTA paths).
+            if (_nodeFiles.Count == 0)
+                return Enumerable.Empty<NodeFile>();
+
             return GetAreaIndexesInRadius(pos, radius)
                 .Select(GetAreaIdFromIndexes)
                 .Select(GetAreaById);
