@@ -44,11 +44,14 @@ namespace SanAndreasUnity.Kochi
         public static GameObject Build(Data data)
         {
             var root = new GameObject("KochiOsmWorld");
+            s_culler = root.AddComponent<KochiChunkCuller>();
             BuildGround(data, root.transform);
             BuildRoads(data, root.transform);
             BuildBuildings(data, root.transform);
             return root;
         }
+
+        static KochiChunkCuller s_culler;
 
         static void BuildGround(Data data, Transform parent)
         {
@@ -64,7 +67,9 @@ namespace SanAndreasUnity.Kochi
             go.AddComponent<MeshFilter>().sharedMesh = mesh;
             var material = new Material(KochiMaterials.Placeholder) { mainTexture = Resources.Load<Texture2D>(Resource + "ground"), color = Color.white };
             material.SetFloat("_Glossiness", 0f);
-            go.AddComponent<MeshRenderer>().sharedMaterial = material;
+            var groundRenderer = go.AddComponent<MeshRenderer>();
+            groundRenderer.sharedMaterial = material;
+            groundRenderer.shadowCastingMode = ShadowCastingMode.Off;
             var box = go.AddComponent<BoxCollider>();
             box.center = new Vector3((b[0] + b[2]) / 2f, -0.5f, (b[1] + b[3]) / 2f);
             box.size = new Vector3(b[2] - b[0], 1f, b[3] - b[1]);
@@ -109,8 +114,11 @@ namespace SanAndreasUnity.Kochi
             go.AddComponent<MeshFilter>().sharedMesh = mesh;
             var renderer = go.AddComponent<MeshRenderer>();
             KochiMaterials.ApplyPlaceholder(renderer, block, color);
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = !collider;
             if (collider)
                 go.AddComponent<MeshCollider>().sharedMesh = mesh;
+            s_culler.Add(renderer);
         }
 
         static void BuildRoads(Data data, Transform parent)
@@ -194,6 +202,54 @@ namespace SanAndreasUnity.Kochi
                 }
             tex.Apply();
             return tex;
+        }
+    }
+}
+
+namespace SanAndreasUnity.Kochi
+{
+    /// Only draws world chunks near the camera; fog hides the cut-off.
+    public class KochiChunkCuller : MonoBehaviour
+    {
+        public float drawDistance = 420f;
+        readonly List<Renderer> _renderers = new List<Renderer>();
+        int _next;
+
+        public void Add(Renderer renderer) => _renderers.Add(renderer);
+
+        void Start()
+        {
+            RenderSettings.fog = true;
+            RenderSettings.fogMode = FogMode.Linear;
+            RenderSettings.fogColor = new Color(0.72f, 0.80f, 0.90f);
+            RenderSettings.fogStartDistance = drawDistance * 0.45f;
+            RenderSettings.fogEndDistance = drawDistance;
+            QualitySettings.shadowDistance = 40f;
+            QualitySettings.shadowCascades = 1;
+            QualitySettings.antiAliasing = 0;
+            QualitySettings.pixelLightCount = 1;
+        }
+
+        void Update()
+        {
+            var cam = Camera.main;
+            if (cam == null || _renderers.Count == 0)
+                return;
+            if (cam.farClipPlane > drawDistance + 50f)
+                cam.farClipPlane = drawDistance + 50f;
+            var pos = cam.transform.position;
+            float limit = (drawDistance + 125f) * (drawDistance + 125f);
+            int count = Mathf.Min(_renderers.Count, 400);
+            for (int i = 0; i < count; i++)
+            {
+                _next = (_next + 1) % _renderers.Count;
+                var r = _renderers[_next];
+                if (r == null)
+                    continue;
+                var c = r.bounds.center;
+                float dx = c.x - pos.x, dz = c.z - pos.z;
+                r.enabled = dx * dx + dz * dz < limit;
+            }
         }
     }
 }
