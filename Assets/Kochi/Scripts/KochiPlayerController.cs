@@ -1,3 +1,4 @@
+using Kochi.World;
 using UnityEngine;
 
 namespace Kochi.Gameplay
@@ -44,9 +45,7 @@ namespace Kochi.Gameplay
             visual.transform.SetParent(parent, false);
             visual.transform.localPosition = localPosition;
             visual.transform.localScale = localScale;
-            block.Clear();
-            block.SetColor("_Color", color);
-            visual.GetComponent<Renderer>().SetPropertyBlock(block);
+            KochiMaterials.ApplyPlaceholder(visual.GetComponent<Renderer>(), block, color);
         }
 
         void Update()

@@ -16,7 +16,7 @@ namespace Kochi.Gameplay
 
         [Tooltip("Resource path (under a Resources folder, without extension) of the district JSON to load.")]
         public string districtResourcePath = KochiDistrictPaths.TestDistrict;
-        public float enterVehicleDistance = 3.5f;
+        public float enterVehicleDistance = 4.5f;
         public float maxExitSpeedKmh = 15f;
         public float landmarkHintDistance = 30f;
 

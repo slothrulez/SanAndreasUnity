@@ -1,3 +1,4 @@
+using Kochi.World;
 using UnityEngine;
 
 namespace Kochi.Gameplay
@@ -135,9 +136,7 @@ namespace Kochi.Gameplay
             part.transform.localScale = localScale;
             if (type == PrimitiveType.Cylinder)
                 part.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            block.Clear();
-            block.SetColor("_Color", color);
-            part.GetComponent<Renderer>().SetPropertyBlock(block);
+            KochiMaterials.ApplyPlaceholder(part.GetComponent<Renderer>(), block, color);
             return part;
         }
     }
