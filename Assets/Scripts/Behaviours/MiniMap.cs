@@ -90,6 +90,26 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
+        /// Uses the given textures instead of loading the GTA radar and HUD textures.
+        public void LoadCustom(Texture2D map, Texture2D playerBlip, Texture2D northBlip)
+        {
+            MapTexture = map;
+            PlayerBlip = playerBlip;
+            NorthBlip = northBlip;
+            northImage.sprite = Sprite.Create(NorthBlip, new Rect(0, 0, NorthBlip.width, NorthBlip.height), new Vector2(NorthBlip.width, NorthBlip.height) / 2);
+            playerImage.texture = PlayerBlip;
+            mapImage.texture = MapTexture;
+            mapImage.color = Color.white;
+
+            BlackPixel = new Texture2D(1, 1);
+            BlackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
+            BlackPixel.Apply();
+
+            SeaPixel = new Texture2D(1, 1);
+            SeaPixel.SetPixel(0, 0, map.GetPixel(0, 0));
+            SeaPixel.Apply();
+        }
+
         private void LoadGameTextures()
         {
             LoadMapTexture();

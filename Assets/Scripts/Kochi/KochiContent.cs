@@ -55,7 +55,7 @@ namespace SanAndreasUnity.Kochi
 
         class KochiCredits : MonoBehaviour
         {
-            const string Text = "Map data \u00a9 OpenStreetMap contributors (ODbL) \u00b7 Models: Quaternius (CC0)";
+            const string Text = "Map data \u00a9 OpenStreetMap contributors (ODbL) \u00b7 Map style after Subin Siby's Vice City OSM theme \u00b7 Models: Quaternius (CC0)";
 
             void OnGUI()
             {
@@ -87,7 +87,7 @@ namespace SanAndreasUnity.Kochi
             if (IsInstalled)
                 return;
             IsInstalled = true;
-            Importing.Zone.CustomZoneName = _ => "Fort Kochi";
+            Importing.Zone.CustomZoneName = ZoneName;
             var credits = new GameObject("KochiCredits");
             Object.DontDestroyOnLoad(credits);
             credits.AddComponent<KochiCredits>();
@@ -201,8 +201,37 @@ namespace SanAndreasUnity.Kochi
         static FrameContainer LoadVehicleModel(VehicleDef def, Transform parent) =>
             InstantiateModel("Vehicles", def.ModelName, parent, out _);
 
+        public static KochiOsmWorld.Data OsmWorld { get; private set; }
+
+        // Rough west-to-east neighbourhoods along the OSM extract.
+        static string ZoneName(Vector3 pos)
+        {
+            if (OsmWorld == null) return "Fort Kochi";
+            if (pos.x < -1200f) return "Fort Kochi";
+            if (pos.x < 500f) return "Mattancherry";
+            if (pos.x < 1700f) return "Willingdon Island";
+            return "Ernakulam";
+        }
+
         static void BuildWorld()
         {
+            OsmWorld = KochiOsmWorld.Load();
+            if (OsmWorld != null)
+            {
+                KochiOsmWorld.Build(OsmWorld);
+                var spawn = OsmWorld.spawn;
+                var main = Camera.main;
+                if (main != null)
+                {
+                    main.transform.position = new Vector3(spawn.x, 1f, spawn.z);
+                    main.transform.rotation = Quaternion.Euler(0f, spawn.heading, 0f);
+                }
+                if (MiniMap.Instance != null)
+                    F.RunExceptionSafe(() => MiniMap.Instance.LoadCustom(KochiOsmWorld.MinimapTexture(),
+                        KochiOsmWorld.Blip(Color.white, true), KochiOsmWorld.Blip(new Color(0.9f, 0.2f, 0.4f), false)));
+                return;
+            }
+
             District = KochiDistrictBuilder.LoadFromResources(DistrictResource);
             KochiDistrictBuilder.Build(District);
             var cam = Camera.main;
@@ -215,6 +244,22 @@ namespace SanAndreasUnity.Kochi
 
         static void SpawnVehicles()
         {
+            if (OsmWorld != null)
+            {
+                if (!NetStatus.IsServer)
+                    return;
+                var spawn = OsmWorld.spawn;
+                var rotation = Quaternion.Euler(0f, spawn.heading, 0f);
+                var start = new Vector3(spawn.x, 0.5f, spawn.z);
+                var side = rotation * Vector3.right * Mathf.Max(1.5f, spawn.roadWidth / 2f - 1.2f);
+                for (int i = 0; i < s_vehicles.Length; i++)
+                {
+                    var pos = start + rotation * Vector3.forward * (6f + 7f * i) + side;
+                    var id = s_vehicles[i].id;
+                    F.RunExceptionSafe(() => Vehicle.Create(id, pos, rotation));
+                }
+                return;
+            }
             if (District?.vehicleSpawns == null || !NetStatus.IsServer)
                 return;
             for (int i = 0; i < District.vehicleSpawns.Length; i++)
